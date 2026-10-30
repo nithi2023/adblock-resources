@@ -1,0 +1,33 @@
+name: Build resources
+
+# Daily, and on demand: rebuild dist/ from the latest uBlock Origin release and Brave's resources,
+# and commit it when it changed. Public repo, so Actions minutes are free.
+on:
+  schedule:
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['build.mjs', 'package.json', 'package-lock.json']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: node build.mjs
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- dist; then echo "No change"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dist
+          git commit -m "Update resources ($(jq -r .ublockOrigin dist/meta.json))"
+          git push

@@ -1,0 +1,14 @@
+{
+  "name": "adblock-resources",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Scriptlet and redirect resources for adblock-rust, assembled from uBlock Origin and Brave",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "adblock-rs": "0.13.3"
+  }
+}
