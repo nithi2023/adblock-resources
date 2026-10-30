@@ -15,7 +15,7 @@ the same way Brave builds its own, and commits it when it changes. The browser d
     node build.mjs                 # latest uBlock Origin release
     UBO_TAG=1.75.0 node build.mjs  # a specific release
 
-Needs Node 22+ and Rust (the `adblock-rs` package compiles on install).
+Needs Node 24+ and Rust (the `adblock-rs` package compiles on install).
 
 ## Licences
 

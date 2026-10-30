@@ -17,10 +17,11 @@ const BRAVE_RESOURCES = 'https://raw.githubusercontent.com/brave/adblock-resourc
 const TRUSTED = 1
 
 async function latestUboTag () {
-  const res = await fetch('https://api.github.com/repos/gorhill/uBlock/releases/latest', {
-    headers: { Accept: 'application/vnd.github+json' }
-  })
-  if (!res.ok) throw new Error(`GitHub API ${res.status}`)
+  // Unauthenticated API calls from shared CI runners hit the rate limit; Actions provides a token.
+  const headers = { Accept: 'application/vnd.github+json' }
+  if (process.env.GITHUB_TOKEN) headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`
+  const res = await fetch('https://api.github.com/repos/gorhill/uBlock/releases/latest', { headers })
+  if (!res.ok) throw new Error(`GitHub API ${res.status}: ${await res.text()}`)
   return (await res.json()).tag_name
 }
 
